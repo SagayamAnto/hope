@@ -32,35 +32,31 @@ st.set_page_config(page_title="Bus Fleet Manager", page_icon="🚌", layout="wid
 
 # --- Service wrapper: either Firestore-backed (optional) or mock ---
 class FleetBackend:
-def __init__(self):
-self.use_firebase = False
-self.mock = BusFleetService()
-self.fb_db = None
+    def __init__(self):
+        self.use_firebase = False
+        self.mock = BusFleetService()
+        self.fb_db = None
 
+        if USE_FIREBASE and FIREBASE_CONFIG:
+            try:
+                import firebase_admin
+                from firebase_admin import credentials, firestore
 
-if USE_FIREBASE and FIREBASE_CONFIG:
-try:
-import firebase_admin
-from firebase_admin import credentials, firestore
+                cfg = json.loads(FIREBASE_CONFIG)
+                cred = credentials.Certificate(cfg)
+                if not firebase_admin._apps:
+                    firebase_admin.initialize_app(cred)
+                self.fb_db = firestore.client()
+                self.use_firebase = True
+            except Exception as e:
+                st.warning(f"Firebase init failed, using mock backend. Reason: {e}")
+                self.use_firebase = False
 
+    def collection_path(self):
+        return f"artifacts/{APP_ID}/public/data/bus_fleet_status"
 
-cfg = json.loads(FIREBASE_CONFIG)
-cred = credentials.Certificate(cfg)
-if not firebase_admin._apps:
-firebase_admin.initialize_app(cred)
-self.fb_db = firestore.client()
-self.use_firebase = True
-except Exception as e:
-st.warning(f"Firebase init failed, using mock backend. Reason: {e}")
-self.use_firebase = False
-
-
-def collection_path(self):(self):
-return f"artifacts/{APP_ID}/public/data/bus_fleet_status"
-
-
-def get_all(self):
-if self.use_firebase and self.fb_db:
-coll = self.fb_db.collection(self.collection_path())
-docs = coll.stream()
-st.caption("Tip: To use Firestore, set environment variables USE_FIREBASE=1 and __firebase_config to a JSON service account.")
+    def get_all(self):
+        if self.use_firebase and self.fb_db:
+            coll = self.fb_db.collection(self.collection_path())
+            docs = coll.stream()
+            st.caption("Tip: To use Firestore, set environment variables USE_FIREBASE=1 and __firebase_config to a JSON service account.")
