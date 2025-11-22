@@ -18,7 +18,7 @@ import pandas as pd
 
 
 # Try importing local mock service (provided) — this is safe and expected
-from firebase_mock import BusFleetService
+from firebase_admin import BusFleetService
 
 
 # --- Configuration ---
@@ -60,4 +60,5 @@ class FleetBackend:
             coll = self.fb_db.collection(self.collection_path())
             docs = coll.stream()
             st.caption("Tip: To use Firestore, set environment variables USE_FIREBASE=1 and __firebase_config to a JSON service account.")
+
 
