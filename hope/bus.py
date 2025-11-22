@@ -1,6 +1,6 @@
 import streamlit as st 
 import firebase_admin
-from firebase_admin import credentials, firestore, auth
+from firebase_admin import credentials
 import json
 import os
 from datetime import datetime
@@ -90,3 +90,4 @@ if selected_bus_id in buses:
     st.write(f"**Last Updated:** {last_updated_str}")
 else:
     st.write("No bus selected or data unavailable.")
+
