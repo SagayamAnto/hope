@@ -32,10 +32,10 @@ st.set_page_config(page_title="Bus Fleet Manager", page_icon="🚌", layout="wid
 
 # --- Service wrapper: either Firestore-backed (optional) or mock ---
 class FleetBackend:
-def __init__(self):
-self.use_firebase = False
-self.mock = BusFleetService()
-self.fb_db = None
+  def __init__(self):
+  self.use_firebase = False
+  self.mock = BusFleetService()
+  self.fb_db = None
 
 
 if USE_FIREBASE and FIREBASE_CONFIG:
@@ -59,3 +59,4 @@ self.use_firebase = False
 
 def collection_path(self):
 st.caption("Tip: To use Firestore, set environment variables USE_FIREBASE=1 and __firebase_config to a JSON service account.")
+
